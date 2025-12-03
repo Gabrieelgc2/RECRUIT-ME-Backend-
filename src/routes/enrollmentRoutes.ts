@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import * as enrollmentController from '../controllers/enrollmentController';
-import { authMiddleware } from '../middlewares/auth';
+import * as enrollmentController from '../controllers/enrollmentController.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
 
 const router = Router();
 

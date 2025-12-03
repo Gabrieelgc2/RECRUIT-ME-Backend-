@@ -1,6 +1,6 @@
-import { Response } from 'express';
-import { AuthRequest } from '../middlewares/auth';
-import * as programService from '../services/programService';
+import type { Response } from 'express';
+import type { AuthRequest } from '../middlewares/auth.ts';
+import * as programService from '../services/programService.ts';
 import { z } from 'zod';
 
 const CreateProgramSchema = z.object({
@@ -94,7 +94,6 @@ export async function createProgram(req: AuthRequest, res: Response): Promise<vo
     if (error instanceof z.ZodError) {
       res.status(400).json({
         error: 'Dados inválidos',
-        details: error.errors
       });
       return;
     }

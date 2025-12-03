@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma';
+import { prisma } from '../config/prisma.ts';
 
 export async function enrollInProgram(userId: string, programId: string) {
   // Verificar se já está inscrito

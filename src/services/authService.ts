@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
-import { prisma } from '../config/prisma';
-import { generateToken } from '../utils/jwt';
+import { prisma } from '../config/prisma.ts';
+import { generateToken } from '../utils/jwt.ts';
 
 export async function registerUser(
   name: string,

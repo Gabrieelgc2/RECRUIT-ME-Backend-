@@ -1,6 +1,6 @@
-import { Response } from 'express';
-import { AuthRequest } from '../middlewares/auth';
-import * as authService from '../services/authService';
+import type { Response } from 'express';
+import type { AuthRequest } from '../middlewares/auth.ts';
+import * as authService from '../services/authService.ts';
 import { z } from 'zod';
 
 const SignupSchema = z.object({
@@ -29,7 +29,6 @@ export async function signup(req: AuthRequest, res: Response): Promise<void> {
     if (error instanceof z.ZodError) {
       res.status(400).json({
         error: 'Dados inválidos',
-        details: error.errors
       });
       return;
     }
@@ -64,7 +63,6 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
     if (error instanceof z.ZodError) {
       res.status(400).json({
         error: 'Dados inválidos',
-        details: error.errors
       });
       return;
     }

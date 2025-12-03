@@ -4,11 +4,11 @@ import 'dotenv/config';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import authRoutes from './routes/authRoutes';
-import programRoutes from './routes/programRoutes';
-import enrollmentRoutes from './routes/enrollmentRoutes';
-import savedProgramRoutes from './routes/savedProgramRoutes';
-import { errorHandler } from './middlewares/auth';
+import authRoutes from './routes/authRoutes.ts';
+import programRoutes from './routes/programRoutes.ts';
+import enrollmentRoutes from './routes/enrollmentRoutes.ts';
+import savedProgramRoutes from './routes/savedProgramRoutes.ts';
+import { errorHandler } from './middlewares/auth.ts';
 
 const app = express();
 const PORT = process.env.PORT || 3001;

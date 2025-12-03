@@ -1,6 +1,6 @@
-import { Response } from 'express';
-import { AuthRequest } from '../middlewares/auth';
-import * as enrollmentService from '../services/enrollmentService';
+import type { Response } from 'express';
+import type { AuthRequest } from '../middlewares/auth.ts';
+import * as enrollmentService from '../services/enrollmentService.ts';
 
 export async function enrollInProgram(req: AuthRequest, res: Response): Promise<void> {
   try {
