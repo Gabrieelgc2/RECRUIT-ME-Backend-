@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+model User {
+    id              String   @id @default(cuid())
+    name            String
+    email           String   @unique
+    password        String
+    phone           String?
+    bio             String?
+    avatar          String?
+    role            String   @default("student") // 'student', 'company', 'admin'
+    profileComplete Int      @default(0) // Percentual de completude do perfil
+    emailVerified   Boolean  @default(false)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    enrollments   Enrollment[]
+    savedPrograms SavedProgram[]
+    company       Company?
+}
+
+model Company {
+    id          String   @id @default(cuid())
+    name        String   @unique
+    email       String   @unique
+    cnpj        String?  @unique
+    logo        String?
+    description String?  @db.Text
+    website     String?
+    phone       String?
+    address     String?
+    city        String?
+    state       String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    userId   String    @unique
+    user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    programs Program[]
+}
+
+model Program {
+    id                String   @id @default(cuid())
+    title             String
+    description       String   @db.Text
+    type              String // 'bootcamp', 'estágio', 'workshop', 'curso'
+    companyId         String
+    company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    deadline          DateTime
+    enrollmentEndDate DateTime
+    maxParticipants   Int?
+    tags              String[] // ['frontend', 'backend', 'dados', 'devops']
+    status            String   @default("open") // 'open', 'closed', 'coming-soon'
+    imageUrl          String?
+    requirements      String?  @db.Text
+    benefits          String?  @db.Text
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+
+    enrollments   Enrollment[]
+    savedPrograms SavedProgram[]
+}
+
+model Enrollment {
+    id         String   @id @default(cuid())
+    userId     String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    programId  String
+    program    Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+    status     String   @default("enrolled") // 'enrolled', 'completed', 'abandoned', 'rejected'
+    enrolledAt DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@unique([userId, programId])
+    @@index([userId])
+    @@index([programId])
+}
+
+model SavedProgram {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    programId String
+    program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+    savedAt   DateTime @default(now())
+
+    @@unique([userId, programId])
+    @@index([userId])
+    @@index([programId])
+}
