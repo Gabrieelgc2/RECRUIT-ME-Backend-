@@ -4,12 +4,8 @@ import 'dotenv/config';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import authRoutes from './routes/authRoutes';
-import programRoutes from './routes/programRoutes';
-import enrollmentRoutes from './routes/enrollmentRoutes';
-import savedProgramRoutes from './routes/savedProgramRoutes';
-import { errorHandler } from './middlewares/auth';
-
+import authRoutes from './routes/authRoutes.ts';
+import { errorHandler } from './middlewares/auth.ts';
 const app = express();
 const PORT = process.env.PORT || 3001;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -61,18 +57,6 @@ const swaggerOptions = {
         name: 'Auth',
         description: 'Endpoints de autenticação (login, signup, perfil)'
       },
-      {
-        name: 'Programs',
-        description: 'Endpoints para gerenciar programas de formação'
-      },
-      {
-        name: 'Enrollments',
-        description: 'Endpoints para inscrições em programas'
-      },
-      {
-        name: 'SavedPrograms',
-        description: 'Endpoints para programas salvos/favoritos'
-      }
     ]
   },
   apis: ['./src/routes/*.ts']
@@ -92,9 +76,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 
 // API Routes
 app.use('/auth', authRoutes);
-app.use('/programs', programRoutes);
-app.use('/enrollments', enrollmentRoutes);
-app.use('/saved-programs', savedProgramRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {

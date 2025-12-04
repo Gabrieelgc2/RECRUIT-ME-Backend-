@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import * as authController from '../controllers/authController';
-import { authMiddleware } from '../middlewares/auth';
+import * as authController from '../controllers/authController.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
 
 const router = Router();
 
@@ -24,6 +24,9 @@ const router = Router();
  *                 type: string
  *                 example: "joao@example.com"
  *               password:
+ *                 type: string
+ *                 example: "senha123456"
+ *               confirmPassword:
  *                 type: string
  *                 example: "senha123456"
  *     responses:
