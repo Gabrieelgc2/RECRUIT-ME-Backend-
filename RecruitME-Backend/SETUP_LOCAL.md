@@ -123,24 +123,6 @@ POST   /auth/login              - Fazer login
 GET    /auth/profile            - Obter perfil (autenticado)
 PUT    /auth/profile            - Atualizar perfil (autenticado)
 
-PROGRAMS
-GET    /programs                - Listar todos os programas
-GET    /programs/:id            - Obter programa por ID
-POST   /programs                - Criar novo programa (autenticado)
-PUT    /programs/:id            - Atualizar programa (autenticado)
-DELETE /programs/:id            - Deletar programa (autenticado)
-
-ENROLLMENTS
-POST   /enrollments             - Se inscrever em programa (autenticado)
-DELETE /enrollments/:id         - Cancelar inscrição (autenticado)
-GET    /enrollments/my          - Obter minhas inscrições (autenticado)
-
-SAVED PROGRAMS
-POST   /saved-programs          - Salvar programa (autenticado)
-DELETE /saved-programs/:id      - Remover dos salvos (autenticado)
-GET    /saved-programs/my       - Obter programas salvos (autenticado)
-```
-
 ## 🔐 Autenticação
 
 ### Login
@@ -192,41 +174,6 @@ curl -X POST http://localhost:3001/auth/signup \
   }'
 ```
 
-### 2. Listar Programas
-
-```bash
-curl http://localhost:3001/programs
-```
-
-Com filtros:
-```bash
-curl "http://localhost:3001/programs?type=bootcamp&status=open&tags=frontend,backend"
-```
-
-### 3. Obter Programa por ID
-
-```bash
-curl http://localhost:3001/programs/program-uuid
-```
-
-### 4. Se Inscrever em Programa
-
-```bash
-curl -X POST http://localhost:3001/enrollments \
-  -H "Authorization: Bearer seu_token" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "programId": "program-uuid"
-  }'
-```
-
-### 5. Obter Minhas Inscrições
-
-```bash
-curl -X GET http://localhost:3001/enrollments/my \
-  -H "Authorization: Bearer seu_token"
-```
-
 ## 🗄️ Estrutura do Banco de Dados
 
 ### Models
@@ -263,45 +210,6 @@ curl -X GET http://localhost:3001/enrollments/my \
 - userId: String (FK)
 - createdAt: DateTime
 - updatedAt: DateTime
-```
-
-#### Program
-```prisma
-- id: String (PK)
-- title: String
-- description: String
-- type: String (bootcamp, estágio, workshop, curso)
-- companyId: String (FK)
-- deadline: DateTime
-- enrollmentEndDate: DateTime
-- maxParticipants: Int?
-- tags: String[] (frontend, backend, dados, devops)
-- status: String (open, closed, coming-soon)
-- imageUrl: String?
-- requirements: String?
-- benefits: String?
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
-#### Enrollment
-```prisma
-- id: String (PK)
-- userId: String (FK)
-- programId: String (FK)
-- status: String (enrolled, completed, abandoned, rejected)
-- enrolledAt: DateTime
-- updatedAt: DateTime
-- Unique: userId + programId
-```
-
-#### SavedProgram
-```prisma
-- id: String (PK)
-- userId: String (FK)
-- programId: String (FK)
-- savedAt: DateTime
-- Unique: userId + programId
 ```
 
 ## 🚀 Deployment
@@ -351,46 +259,6 @@ FRONTEND_URL          # URL do frontend para CORS
 PRODUCTION_URL        # URL de produção do backend
 ```
 
-### ⛔ Segurança
-
-**⚠️ NUNCA commite o arquivo `.env.local` ou `.env` com valores reais!**
-
-- Use variáveis de ambiente diferentes para dev e prod
-- Mude `JWT_SECRET` em produção
-- Use HTTPS em produção
-- Implemente rate limiting
-- Valide e sanitize todas as entradas
-- Use CORS restritivo em produção
-
-## 🐛 Troubleshooting
-
-### Erro: "Can't reach database server"
-
-```bash
-# Verifique se PostgreSQL está rodando
-psql -U postgres -h localhost
-
-# Ou se usar Docker
-docker-compose up -d
-```
-
-### Erro: "Prisma Client is not ready"
-
-```bash
-# Gere o cliente Prisma novamente
-npx prisma generate
-```
-
-### Erro de Migration
-
-```bash
-# Resete o banco (desenvolvimento apenas!)
-npx prisma migrate reset
-
-# Ou crie migration nova
-npx prisma migrate dev --name fix_name
-```
-
 ## 📚 Recursos Úteis
 
 - [Express.js Docs](https://expressjs.com/)
@@ -416,7 +284,3 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 - **RecruitME Team** - [GitHub](https://github.com/lblima038)
 
 ---
-
-**Desenvolvido com ❤️ para a comunidade de desenvolvimento**
-
-Para dúvidas ou sugestões, abra uma [Issue](https://github.com/lblima038/RecruitME-Backend/issues).
