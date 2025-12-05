@@ -26,6 +26,9 @@ const router = Router();
  *               password:
  *                 type: string
  *                 example: "senha123456"
+ *               confirmPassword:
+ *                 type: string
+ *                 example: "senha123456"
  *     responses:
  *       201:
  *         description: Usuário cadastrado com sucesso

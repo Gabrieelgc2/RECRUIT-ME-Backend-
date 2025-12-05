@@ -3,11 +3,17 @@ import type { AuthRequest } from '../middlewares/auth.ts';
 import * as authService from '../services/authService.ts';
 import { z } from 'zod';
 
-const SignupSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter ao menos 2 caracteres'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter ao menos 6 caracteres')
-});
+const SignupSchema = z
+  .object({
+    name: z.string().min(1, 'Nome é obrigatório'),
+    email: z.string().email('Email inválido'),
+    password: z.string().min(6, 'Senha deve ter ao menos 6 caracteres'),
+    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória')
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Senhas não conferem'
+  });
 
 const LoginSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -16,7 +22,7 @@ const LoginSchema = z.object({
 
 export async function signup(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { name, email, password } = SignupSchema.parse(req.body);
+    const { name, email, password, confirmPassword } = SignupSchema.parse(req.body);
 
     const result = await authService.registerUser(name, email, password);
 
@@ -50,7 +56,7 @@ export async function signup(req: AuthRequest, res: Response): Promise<void> {
 
 export async function login(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { email, password } = LoginSchema.parse(req.body);
+    const {email, password} = LoginSchema.parse(req.body);
 
     const result = await authService.loginUser(email, password);
 
@@ -110,10 +116,9 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const { name, phone, bio, avatar } = req.body;
+    const { phone, bio, avatar } = req.body;
 
     const user = await authService.updateUserProfile(req.userId, {
-      name,
       phone,
       bio,
       avatar

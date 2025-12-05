@@ -5,8 +5,8 @@ import { generateToken } from '../utils/jwt.ts';
 export async function registerUser(
   name: string,
   email: string,
-  password: string
-) {
+  password: string,
+){
   // Verificar se email já existe
   const existingUser = await prisma.user.findUnique({
     where: { email }
@@ -67,9 +67,9 @@ export async function loginUser(
   return {
     user: {
       id: user.id,
-      name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      name: user.name,
     },
     token
   };
@@ -80,7 +80,6 @@ export async function getUserProfile(userId: string) {
     where: { id: userId },
     select: {
       id: true,
-      name: true,
       email: true,
       phone: true,
       bio: true,
@@ -101,7 +100,6 @@ export async function getUserProfile(userId: string) {
 export async function updateUserProfile(
   userId: string,
   data: {
-    name?: string;
     phone?: string;
     bio?: string;
     avatar?: string;
@@ -112,7 +110,7 @@ export async function updateUserProfile(
     data,
     select: {
       id: true,
-      name: true,
+
       email: true,
       phone: true,
       bio: true,

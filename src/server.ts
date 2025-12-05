@@ -3,12 +3,11 @@ import cors from 'cors';
 import 'dotenv/config';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { authMiddleware, errorHandler } from './middlewares/auth.ts';
+import { userDashboard, companyDashboard } from './controllers/dashboardController.ts';
 
 import authRoutes from './routes/authRoutes.ts';
-import programRoutes from './routes/programRoutes.ts';
-import enrollmentRoutes from './routes/enrollmentRoutes.ts';
-import savedProgramRoutes from './routes/savedProgramRoutes.ts';
-import { errorHandler } from './middlewares/auth.ts';
+import companyRoutes from './routes/companyRoutes.ts';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -61,18 +60,6 @@ const swaggerOptions = {
         name: 'Auth',
         description: 'Endpoints de autenticação (login, signup, perfil)'
       },
-      {
-        name: 'Programs',
-        description: 'Endpoints para gerenciar programas de formação'
-      },
-      {
-        name: 'Enrollments',
-        description: 'Endpoints para inscrições em programas'
-      },
-      {
-        name: 'SavedPrograms',
-        description: 'Endpoints para programas salvos/favoritos'
-      }
     ]
   },
   apis: ['./src/routes/*.ts']
@@ -92,9 +79,11 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 
 // API Routes
 app.use('/auth', authRoutes);
-app.use('/programs', programRoutes);
-app.use('/enrollments', enrollmentRoutes);
-app.use('/saved-programs', savedProgramRoutes);
+app.use('/company', companyRoutes);
+
+// Dashboard endpoints (protegidos)
+app.get('/dashboard', authMiddleware, userDashboard);
+app.get('/company-dashboard', authMiddleware, companyDashboard);
 
 // Health Check
 app.get('/health', (req, res) => {
